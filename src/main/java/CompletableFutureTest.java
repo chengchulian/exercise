@@ -1,6 +1,5 @@
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -14,8 +13,26 @@ import org.springframework.beans.BeanUtils;
  */
 public class CompletableFutureTest {
 
+    public static Executor executor = Executors.newFixedThreadPool(20);
+
 
     public static void main(String[] args) {
+
+        List<CompletableFuture<String>> futureList = new ArrayList<>();
+
+        futureList.add(CompletableFuture.supplyAsync(() -> Thread.currentThread().getName()));
+        futureList.add(CompletableFuture.supplyAsync(() -> Thread.currentThread().getName()));
+        futureList.add(CompletableFuture.supplyAsync(() -> Thread.currentThread().getName()));
+
+
+
+        CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
+
+        for (CompletableFuture<String> future : futureList) {
+            System.out.println(future.join());
+        }
+
+        System.out.println("====================================");
 
     }
 
